@@ -19,25 +19,27 @@ The CSS and JS entry points in `index.html` have a `?v=` query string for cache 
 npm run dev           # Vite dev server at localhost:5173
 npm run build         # Production build to dist/
 npm run preview       # Preview production build
-npm run fetch-sheet   # Fetch from Google Sheet + geocode → locations-resolved.json
-npm run prepare-data  # Geocode local locations.json → locations-resolved.json (local fallback)
+npm run prepare-data  # Geocode local locations.json → locations-resolved.json (fallback only)
 ```
 
-### Google Sheets workflow (primary)
+## Data source — Google Sheets (real-time)
 
-1. Copy `.env.example` to `.env` and set `SHEET_URL` to the sheet's CSV export URL
-2. Run `npm run fetch-sheet` — fetches the sheet, geocodes missing coordinates, writes `locations-resolved.json`
-3. Run `npm run dev` to preview, then deploy
+Location data is fetched live from Google Sheets every time the page loads. The sheet ID is in `src/config.js`. Geocoded coordinates are cached in the user's `localStorage` so Nominatim is only called for new or changed locations.
 
-Re-running `fetch-sheet` is safe — entries whose geocoding is already cached are skipped. Requires Node 18+.
+### One-time sheet setup (required)
 
-### How to get the Sheet URL
+The sheet must be published so the browser can fetch it without authentication:
 
 1. Open the Google Sheet
 2. **File → Share → Publish to web**
-3. Select the correct tab, choose **Comma-separated values (.csv)**, click **Publish**
-4. Copy the URL (looks like `https://docs.google.com/spreadsheets/d/ID/pub?output=csv&gid=0`)
-5. Paste it as `SHEET_URL` in `.env`
+3. Select the correct tab → **Comma-separated values (.csv)** → **Publish**
+4. Done — no URL needed in code, the sheet ID in `src/config.js` is sufficient
+
+If the sheet is not published, the app shows an error: *"Sheet is not published."*
+
+### Changing the sheet
+
+Update `SHEET_ID` in `src/config.js`.
 
 ### Required sheet columns (first row = headers)
 

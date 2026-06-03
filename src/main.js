@@ -1,10 +1,43 @@
-import locations from './data/locations-resolved.json'
+import { fetchLocations } from './sheetData.js'
 import { initMap, loadMarkers, updateMarkers, highlightMarker, panToLocation } from './map.js'
 import { initFilters, applyFilters, refreshFilterLabels } from './filters.js'
 import { renderList, highlightListItem } from './locationList.js'
 import { toggleLang, t, getTitle, getDescription, getTagLabel } from './i18n.js'
 
+// ---------------------------------------------------------------------------
+// Loading overlay
+// ---------------------------------------------------------------------------
+
+const overlay = document.getElementById('loading-overlay')
+const statusEl = document.getElementById('loading-status')
+
+function setStatus(msg) {
+  statusEl.textContent = msg
+}
+
+function hideOverlay() {
+  overlay.classList.add('hidden')
+  setTimeout(() => { overlay.style.display = 'none' }, 350)
+}
+
+function showError(msg) {
+  statusEl.textContent = ''
+  const err = document.createElement('p')
+  err.className = 'loading-error'
+  err.textContent = msg
+  overlay.querySelector('.loading-spinner')?.remove()
+  overlay.appendChild(err)
+}
+
+// ---------------------------------------------------------------------------
+// Map initialisation (happens immediately, before data loads)
+// ---------------------------------------------------------------------------
+
 initMap('map')
+
+// ---------------------------------------------------------------------------
+// Sidebar
+// ---------------------------------------------------------------------------
 
 let currentSidebarLocation = null
 
@@ -33,35 +66,51 @@ function closeSidebar() {
   document.getElementById('location-sidebar').classList.add('sidebar--hidden')
 }
 
-function onSelectLocation(location) {
-  openSidebar(location)
-  highlightMarker(location.id)
-  highlightListItem(location.id)
-  if (location.lat != null && location.lng != null) {
-    panToLocation(location.lat, location.lng)
-  }
-}
-
-loadMarkers(locations, onSelectLocation)
-initFilters(locations, '#time-filters', '#tag-filters')
-renderList(locations, '#location-list', onSelectLocation)
-
 document.getElementById('sidebar-close').addEventListener('click', closeSidebar)
+
+// ---------------------------------------------------------------------------
+// Language toggle
+// ---------------------------------------------------------------------------
 
 document.getElementById('lang-toggle').addEventListener('click', () => {
   toggleLang()
 })
 
-document.addEventListener('filtersChanged', () => {
-  const filtered = applyFilters(locations)
-  updateMarkers(filtered)
-  renderList(filtered, '#location-list', onSelectLocation)
-})
+// ---------------------------------------------------------------------------
+// Data load
+// ---------------------------------------------------------------------------
 
-document.addEventListener('langChanged', () => {
-  document.getElementById('lang-toggle').textContent = t('langToggle')
-  refreshFilterLabels('#time-filters', '#tag-filters')
-  const filtered = applyFilters(locations)
-  renderList(filtered, '#location-list', onSelectLocation)
-  if (currentSidebarLocation) openSidebar(currentSidebarLocation)
-})
+fetchLocations(setStatus)
+  .then(locations => {
+    hideOverlay()
+
+    function onSelectLocation(location) {
+      openSidebar(location)
+      highlightMarker(location.id)
+      highlightListItem(location.id)
+      if (location.lat != null && location.lng != null) {
+        panToLocation(location.lat, location.lng)
+      }
+    }
+
+    loadMarkers(locations, onSelectLocation)
+    initFilters(locations, '#time-filters', '#tag-filters')
+    renderList(locations, '#location-list', onSelectLocation)
+
+    document.addEventListener('filtersChanged', () => {
+      const filtered = applyFilters(locations)
+      updateMarkers(filtered)
+      renderList(filtered, '#location-list', onSelectLocation)
+    })
+
+    document.addEventListener('langChanged', () => {
+      document.getElementById('lang-toggle').textContent = t('langToggle')
+      refreshFilterLabels('#time-filters', '#tag-filters')
+      const filtered = applyFilters(locations)
+      renderList(filtered, '#location-list', onSelectLocation)
+      if (currentSidebarLocation) openSidebar(currentSidebarLocation)
+    })
+  })
+  .catch(err => {
+    showError(err.message)
+  })
