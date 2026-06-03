@@ -7,7 +7,7 @@ Helsinki event map webpage showing Pääpäivä locations on an interactive map 
 The CSS and JS entry points in `index.html` have a `?v=` query string for cache busting:
 
 ```html
-<link rel="stylesheet" href="/src/style.css?v=0.1.0" />
+<link rel="stylesheet" href="/src/styles/style.css?v=0.1.0" />
 <script type="module" src="/src/main.js?v=0.1.0"></script>
 ```
 
@@ -119,7 +119,7 @@ Multi-select toggles. Empty selection = show all. OR logic within active tags.
 
 ## i18n
 
-Language state lives in `src/i18n.js`. `toggleLang()` switches fi↔en and dispatches `langChanged` on `document`. `main.js` listens and re-renders filter labels, location list, and sidebar.
+Language state lives in `src/i18n.js`. `toggleLang()` switches fi↔en and dispatches `langChanged` on `document`. `main.js`. listens and re-renders filter labels, location list, and sidebar.
 
 Location text fields: `title` / `title_en`, `description` / `description_en`. If the `_en` field is absent, falls back to the Finnish field.
 
