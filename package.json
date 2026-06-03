@@ -1,0 +1,17 @@
+{
+  "name": "paapaiva",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "prepare-data": "node scripts/prepare-data.js"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "leaflet.markercluster": "^1.5.3"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

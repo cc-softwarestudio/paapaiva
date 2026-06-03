@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pääpäivä</title>
+  <link rel="stylesheet" href="/src/style.css?v=0.1.0" />
+</head>
+<body>
+  <header id="app-header">
+    <h1>Pääpäivä</h1>
+    <button id="lang-toggle" class="lang-toggle" aria-label="Switch language">EN</button>
+  </header>
+
+  <div id="filter-bar">
+    <div id="time-filters"></div>
+    <div id="tag-filters"></div>
+  </div>
+
+  <div id="map-wrapper">
+    <div id="map"></div>
+    <aside id="location-sidebar" class="sidebar sidebar--hidden">
+      <button id="sidebar-close" aria-label="Sulje / Close">×</button>
+      <div class="sidebar-content">
+        <h2 class="sidebar-title"></h2>
+        <p class="sidebar-address"></p>
+        <p class="sidebar-time"></p>
+        <p class="sidebar-description"></p>
+        <div class="sidebar-tags"></div>
+      </div>
+    </aside>
+  </div>
+
+  <section id="location-list-section">
+    <ul id="location-list"></ul>
+  </section>
+
+  <script type="module" src="/src/main.js?v=0.1.0"></script>
+</body>
+</html>
