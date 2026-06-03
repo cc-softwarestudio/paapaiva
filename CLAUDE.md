@@ -19,10 +19,45 @@ The CSS and JS entry points in `index.html` have a `?v=` query string for cache 
 npm run dev           # Vite dev server at localhost:5173
 npm run build         # Production build to dist/
 npm run preview       # Preview production build
-npm run prepare-data  # Geocode locations, writes src/data/locations-resolved.json
+npm run fetch-sheet   # Fetch from Google Sheet + geocode → locations-resolved.json
+npm run prepare-data  # Geocode local locations.json → locations-resolved.json (local fallback)
 ```
 
-`prepare-data` must be run after editing `src/data/locations.json`. Requires Node 18+. Respects Nominatim 1 req/sec rate limit. Re-running is safe — already-resolved entries are skipped.
+### Google Sheets workflow (primary)
+
+1. Copy `.env.example` to `.env` and set `SHEET_URL` to the sheet's CSV export URL
+2. Run `npm run fetch-sheet` — fetches the sheet, geocodes missing coordinates, writes `locations-resolved.json`
+3. Run `npm run dev` to preview, then deploy
+
+Re-running `fetch-sheet` is safe — entries whose geocoding is already cached are skipped. Requires Node 18+.
+
+### How to get the Sheet URL
+
+1. Open the Google Sheet
+2. **File → Share → Publish to web**
+3. Select the correct tab, choose **Comma-separated values (.csv)**, click **Publish**
+4. Copy the URL (looks like `https://docs.google.com/spreadsheets/d/ID/pub?output=csv&gid=0`)
+5. Paste it as `SHEET_URL` in `.env`
+
+### Required sheet columns (first row = headers)
+
+| Column | Required | Notes |
+|---|---|---|
+| `id` | Yes | URL-safe slug, e.g. `temppeliaukio` |
+| `title` | Yes | Finnish title |
+| `title_en` | No | English title |
+| `address` | No | Full address — used if no coordinates |
+| `lat` | No | Decimal latitude |
+| `lng` | No | Decimal longitude |
+| `time_start` | Yes | `HH:MM` format |
+| `time_end` | Yes | `HH:MM` format (`00:00` = midnight) |
+| `description` | No | Finnish description |
+| `description_en` | No | English description |
+| `tags` | No | Comma-separated, e.g. `music, culture` |
+
+### Local JSON fallback
+
+If not using Google Sheets, edit `src/data/locations.json` directly and run `npm run prepare-data`.
 
 ## Architecture
 

@@ -5,7 +5,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "prepare-data": "node scripts/prepare-data.js"
+    "prepare-data": "node scripts/prepare-data.js",
+    "fetch-sheet": "node scripts/fetch-sheet.js"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
