@@ -64,7 +64,8 @@ function createClusterIcon(cluster) {
 function buildMarkers(locations) {
   markersById = {}
   const group = L.markerClusterGroup({
-    maxClusterRadius: 60,
+    maxClusterRadius: 35,
+    disableClusteringAtZoom: 16,
     spiderfyOnMaxZoom: true,
     showCoverageOnHover: false,
     zoomToBoundsOnClick: true,
