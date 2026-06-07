@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css'
 import 'leaflet.markercluster'
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
+import { MAP_TILE_LAYERS } from './config.js'
 
 let map
 let clusterGroup
@@ -23,10 +24,12 @@ export function initMap(containerId) {
     maxBoundsViscosity: 0.8
   })
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: 'abcd',
-    maxZoom: 19
+  const theme = document.documentElement.dataset.theme || 'default'
+  const tiles = MAP_TILE_LAYERS[theme] ?? MAP_TILE_LAYERS.default
+  L.tileLayer(tiles.url, {
+    attribution: tiles.attribution,
+    subdomains: tiles.subdomains,
+    maxZoom: tiles.maxZoom,
   }).addTo(map)
 
   return map
