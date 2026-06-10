@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<!-- data-theme: flyer = blue-water map | remove for default gray tiles -->
+<!-- data-theme attribute controls initial Leaflet tile style (flyer = voyager tiles) -->
 <html lang="fi" data-theme="flyer">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pääpäivä</title>
-  <!-- <link rel="stylesheet" href="/src/styles/style.css" /> -->
-  <!-- <link rel="stylesheet" href="/src/styles/style-variant-1-riso.css" /> -->
-  <!-- <link rel="stylesheet" href="/src/styles/style-variant-2-handdrawn.css" /> -->
-  <!-- <link rel="stylesheet" href="/src/styles/style-variant-3-darkroom.css" /> -->
-  <link rel="stylesheet" href="/src/styles/style-variant-4-flyer.css" />
+  <link rel="stylesheet" href="/src/styles/layout.css?v=0.1.2" />
+  <link rel="stylesheet" id="theme-link" href="/src/styles/theme-flyer.css?v=0.1.2" />
 </head>
 <body>
   <header id="app-header">
@@ -17,7 +14,17 @@
       <img src="/hand-drawn-sun.svg" alt="" class="header-sun" width="54" height="52" aria-hidden="true" />
       <h1>Pääpäivä 18.7.2026</h1>
     </div>
-    <button id="lang-toggle" class="lang-toggle" aria-label="Switch language">EN</button>
+    <div class="header-controls">
+      <span class="theme-picker-label">Teema:</span>
+      <select id="theme-picker" aria-label="Vaihda teemaa / Change theme">
+        <option value="theme-flyer" selected>Flyer</option>
+        <option value="theme-default">Default</option>
+        <option value="theme-riso">Riso</option>
+        <option value="theme-handdrawn">Hand-drawn</option>
+        <option value="theme-darkroom">Darkroom</option>
+      </select>
+      <button id="lang-toggle" class="lang-toggle" aria-label="Switch language">EN</button>
+    </div>
   </header>
 
   <div id="filter-bar">
@@ -25,29 +32,36 @@
     <div id="tag-filters"></div>
   </div>
 
-  <div id="map-wrapper">
-    <div id="map"></div>
-    <aside id="location-sidebar" class="sidebar sidebar--hidden">
-      <button id="sidebar-close" aria-label="Sulje / Close">×</button>
-      <div class="sidebar-content">
-        <h2 class="sidebar-title"></h2>
-        <p class="sidebar-address"></p>
-        <p class="sidebar-time"></p>
-        <p class="sidebar-description"></p>
-        <div class="sidebar-tags"></div>
-      </div>
-    </aside>
-  </div>
+  <nav id="mobile-tabs" aria-label="Näkymä / View">
+    <button class="mobile-tab mobile-tab--active" id="tab-map">Kartta</button>
+    <button class="mobile-tab" id="tab-list">Lista</button>
+  </nav>
 
-  <section id="location-list-section">
-    <ul id="location-list"></ul>
-  </section>
+  <div id="content-area">
+    <aside id="location-panel">
+      <ul id="location-list"></ul>
+    </aside>
+
+    <div id="map-wrapper">
+      <div id="map"></div>
+      <aside id="location-sidebar" class="sidebar sidebar--hidden">
+        <button id="sidebar-close" aria-label="Sulje / Close">×</button>
+        <div class="sidebar-content">
+          <h2 class="sidebar-title"></h2>
+          <p class="sidebar-address"></p>
+          <p class="sidebar-time"></p>
+          <p class="sidebar-description"></p>
+          <div class="sidebar-tags"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
 
   <div id="loading-overlay">
     <div class="loading-spinner"></div>
     <p id="loading-status">Ladataan... / Loading...</p>
   </div>
 
-  <script type="module" src="/src/main.js?v=0.1.1"></script>
+  <script type="module" src="/src/main.js?v=0.1.2"></script>
 </body>
 </html>

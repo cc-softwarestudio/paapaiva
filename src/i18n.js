@@ -21,6 +21,10 @@ export const translations = {
     list: {
       noResults: 'Ei tuloksia valituilla suodattimilla.'
     },
+    tabs: {
+      map: 'Kartta',
+      list: 'Lista'
+    },
     langToggle: 'EN'
   },
   en: {
@@ -44,6 +48,10 @@ export const translations = {
     },
     list: {
       noResults: 'No results for the selected filters.'
+    },
+    tabs: {
+      map: 'Map',
+      list: 'List'
     },
     langToggle: 'FI'
   }

@@ -1,5 +1,5 @@
 import { fetchLocations } from './sheetData.js'
-import { initMap, loadMarkers, updateMarkers, highlightMarker, panToLocation } from './map.js'
+import { initMap, loadMarkers, updateMarkers, highlightMarker, panToLocation, invalidateMapSize, setMapTheme } from './map.js'
 import { initFilters, applyFilters, refreshFilterLabels } from './filters.js'
 import { renderList, highlightListItem } from './locationList.js'
 import { toggleLang, t, getTitle, getDescription, getTagLabel } from './i18n.js'
@@ -28,6 +28,44 @@ function showError(msg) {
   overlay.querySelector('.loading-spinner')?.remove()
   overlay.appendChild(err)
 }
+
+// ---------------------------------------------------------------------------
+// Mobile tab switching
+// ---------------------------------------------------------------------------
+
+const tabMapBtn = document.getElementById('tab-map')
+const tabListBtn = document.getElementById('tab-list')
+const contentArea = document.getElementById('content-area')
+
+function switchToMapTab() {
+  tabMapBtn.classList.add('mobile-tab--active')
+  tabListBtn.classList.remove('mobile-tab--active')
+  contentArea.classList.remove('show-list')
+  requestAnimationFrame(() => invalidateMapSize())
+}
+
+function switchToListTab() {
+  tabListBtn.classList.add('mobile-tab--active')
+  tabMapBtn.classList.remove('mobile-tab--active')
+  contentArea.classList.add('show-list')
+}
+
+tabMapBtn.addEventListener('click', switchToMapTab)
+tabListBtn.addEventListener('click', switchToListTab)
+
+// ---------------------------------------------------------------------------
+// Theme picker
+// ---------------------------------------------------------------------------
+
+const themeLink = document.getElementById('theme-link')
+const themePicker = document.getElementById('theme-picker')
+
+themePicker.addEventListener('change', () => {
+  const value = themePicker.value
+  themeLink.href = `/src/styles/${value}.css?v=0.1.2`
+  // Strip "theme-" prefix to look up the Leaflet tile layer
+  setMapTheme(value.replace('theme-', ''))
+})
 
 // ---------------------------------------------------------------------------
 // Map initialisation (happens immediately, before data loads)
@@ -85,6 +123,7 @@ fetchLocations(setStatus)
     hideOverlay()
 
     function onSelectLocation(location) {
+      if (contentArea.classList.contains('show-list')) switchToMapTab()
       openSidebar(location)
       highlightMarker(location.id)
       highlightListItem(location.id)
@@ -105,6 +144,8 @@ fetchLocations(setStatus)
 
     document.addEventListener('langChanged', () => {
       document.getElementById('lang-toggle').textContent = t('langToggle')
+      tabMapBtn.textContent = t('tabs.map')
+      tabListBtn.textContent = t('tabs.list')
       refreshFilterLabels('#time-filters', '#tag-filters')
       const filtered = applyFilters(locations)
       renderList(filtered, '#location-list', onSelectLocation)

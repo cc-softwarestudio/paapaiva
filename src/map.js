@@ -6,6 +6,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import { MAP_TILE_LAYERS } from './config.js'
 
 let map
+let tileLayer
 let clusterGroup
 let markersById = {}
 let activeMarkerId = null
@@ -26,13 +27,24 @@ export function initMap(containerId) {
 
   const theme = document.documentElement.dataset.theme || 'default'
   const tiles = MAP_TILE_LAYERS[theme] ?? MAP_TILE_LAYERS.default
-  L.tileLayer(tiles.url, {
+  tileLayer = L.tileLayer(tiles.url, {
     attribution: tiles.attribution,
     subdomains: tiles.subdomains,
     maxZoom: tiles.maxZoom,
   }).addTo(map)
 
   return map
+}
+
+export function setMapTheme(themeName) {
+  if (!map) return
+  const tiles = MAP_TILE_LAYERS[themeName] ?? MAP_TILE_LAYERS.default
+  if (tileLayer) map.removeLayer(tileLayer)
+  tileLayer = L.tileLayer(tiles.url, {
+    attribution: tiles.attribution,
+    subdomains: tiles.subdomains,
+    maxZoom: tiles.maxZoom,
+  }).addTo(map)
 }
 
 function createMarkerIcon(isActive) {
@@ -107,6 +119,10 @@ export function highlightMarker(id) {
   if (markersById[id]) {
     markersById[id].setIcon(createMarkerIcon(true))
   }
+}
+
+export function invalidateMapSize() {
+  if (map) map.invalidateSize()
 }
 
 export function panToLocation(lat, lng) {
