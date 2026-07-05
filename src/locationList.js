@@ -31,18 +31,18 @@ export function renderList(locations, containerId, onSelectLocation) {
     time.className = 'location-item__time'
     time.textContent = `${loc.time.start}–${loc.time.end}`
 
-    const tags = document.createElement('div')
-    tags.className = 'location-item__tags'
-    loc.tags.slice(0, 2).forEach(tag => {
-      const span = document.createElement('span')
-      span.className = 'tag'
-      span.textContent = getTagLabel(tag)
-      tags.appendChild(span)
-    })
+    // const tags = document.createElement('div')
+    // tags.className = 'location-item__tags'
+    // loc.tags.slice(0, 2).forEach(tag => {
+    //   const span = document.createElement('span')
+    //   span.className = 'tag'
+    //   span.textContent = getTagLabel(tag)
+    //   tags.appendChild(span)
+    // })
 
     li.appendChild(title)
     li.appendChild(time)
-    li.appendChild(tags)
+    //li.appendChild(tags)
     li.addEventListener('click', () => onSelectLocation(loc))
     container.appendChild(li)
   })

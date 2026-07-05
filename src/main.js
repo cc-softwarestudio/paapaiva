@@ -87,14 +87,14 @@ function openSidebar(location) {
   sidebar.querySelector('.sidebar-time').textContent = `${location.time.start}–${location.time.end}`
   sidebar.querySelector('.sidebar-description').textContent = getDescription(location)
 
-  const tagsEl = sidebar.querySelector('.sidebar-tags')
-  tagsEl.innerHTML = ''
-  location.tags.forEach(tag => {
-    const span = document.createElement('span')
-    span.className = 'tag'
-    span.textContent = getTagLabel(tag)
-    tagsEl.appendChild(span)
-  })
+//   const tagsEl = sidebar.querySelector('.sidebar-tags')
+//   tagsEl.innerHTML = ''
+//   location.tags.forEach(tag => {
+//     const span = document.createElement('span')
+//     span.className = 'tag'
+//     span.textContent = getTagLabel(tag)
+//     tagsEl.appendChild(span)
+//   })
 
   sidebar.classList.remove('sidebar--hidden')
 }
@@ -133,7 +133,7 @@ fetchLocations(setStatus)
     }
 
     loadMarkers(locations, onSelectLocation)
-    initFilters(locations, '#time-filters', '#tag-filters')
+    //initFilters(locations, '#time-filters', '#tag-filters')
     renderList(locations, '#location-list', onSelectLocation)
 
     document.addEventListener('filtersChanged', () => {
@@ -146,7 +146,7 @@ fetchLocations(setStatus)
       document.getElementById('lang-toggle').textContent = t('langToggle')
       tabMapBtn.textContent = t('tabs.map')
       tabListBtn.textContent = t('tabs.list')
-      refreshFilterLabels('#time-filters', '#tag-filters')
+      //refreshFilterLabels('#time-filters', '#tag-filters')
       const filtered = applyFilters(locations)
       renderList(filtered, '#location-list', onSelectLocation)
       if (currentSidebarLocation) openSidebar(currentSidebarLocation)
