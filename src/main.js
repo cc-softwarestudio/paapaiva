@@ -3,6 +3,11 @@ import { initMap, loadMarkers, updateMarkers, highlightMarker, panToLocation, in
 import { initFilters, applyFilters, refreshFilterLabels } from './filters.js'
 import { renderList, highlightListItem } from './locationList.js'
 import { toggleLang, t, getTitle, getDescription, getTagLabel } from './i18n.js'
+import themeFlyerUrl from './styles/theme-flyer.css?url'
+import themeDefaultUrl from './styles/theme-default.css?url'
+import themeRisoUrl from './styles/theme-riso.css?url'
+import themeHanddrawnUrl from './styles/theme-handdrawn.css?url'
+import themeDarkroomUrl from './styles/theme-darkroom.css?url'
 
 // ---------------------------------------------------------------------------
 // Loading overlay
@@ -57,12 +62,28 @@ tabListBtn.addEventListener('click', switchToListTab)
 // Theme picker
 // ---------------------------------------------------------------------------
 
-const themeLink = document.getElementById('theme-link')
+const THEME_URLS = {
+  'theme-flyer': themeFlyerUrl,
+  'theme-default': themeDefaultUrl,
+  'theme-riso': themeRisoUrl,
+  'theme-handdrawn': themeHanddrawnUrl,
+  'theme-darkroom': themeDarkroomUrl,
+}
+
 const themePicker = document.getElementById('theme-picker')
+
+// Built dynamically (not left as a static <link> in index.html) because Vite
+// bundles/hashes any stylesheet referenced from index.html, which would
+// break href-swapping and drop the id in production builds.
+const themeLink = document.createElement('link')
+themeLink.rel = 'stylesheet'
+themeLink.id = 'theme-link'
+themeLink.href = THEME_URLS[themePicker.value]
+document.head.appendChild(themeLink)
 
 themePicker.addEventListener('change', () => {
   const value = themePicker.value
-  themeLink.href = `/src/styles/${value}.css?v=0.1.2`
+  themeLink.href = THEME_URLS[value]
   // Strip "theme-" prefix to look up the Leaflet tile layer
   setMapTheme(value.replace('theme-', ''))
 })
