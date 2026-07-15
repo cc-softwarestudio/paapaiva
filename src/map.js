@@ -14,8 +14,8 @@ let onSelectCallback = null
 
 export function initMap(containerId) {
   map = L.map(containerId, {
-    center: [60.1699, 24.9384],
-    zoom: 13,
+    center: [60.197994, 24.932019],
+    zoom: 11,
     minZoom: 10,
     maxZoom: 18,
     maxBounds: [
