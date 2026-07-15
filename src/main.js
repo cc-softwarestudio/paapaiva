@@ -2,7 +2,7 @@ import { fetchLocations } from './sheetData.js'
 import { initMap, loadMarkers, updateMarkers, highlightMarker, panToLocation, invalidateMapSize } from './map.js'
 import { initFilters, applyFilters, refreshFilterLabels } from './filters.js'
 import { renderList, highlightListItem } from './locationList.js'
-import { getTitle, getDescription, getTagLabel } from './i18n.js'
+import { getTitle, getDescription, getTagLabel, t } from './i18n.js'
 import themeSimpleUrl from './styles/theme-simple.css?url'
 
 // ---------------------------------------------------------------------------
@@ -76,12 +76,30 @@ initMap('map')
 
 let currentSidebarLocation = null
 
+function buildGoogleMapsUrl(location) {
+  const destination = location.lat != null && location.lng != null
+    ? `${location.lat},${location.lng}`
+    : location.address || getTitle(location)
+
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}&travelmode=walking`
+}
+
+function refreshSidebarActions(location) {
+  const sidebar = document.getElementById('location-sidebar')
+  const mapsLink = sidebar.querySelector('.sidebar-action--maps')
+
+  mapsLink.href = buildGoogleMapsUrl(location)
+  mapsLink.textContent = t('sidebar.directions')
+  mapsLink.setAttribute('aria-label', t('sidebar.directions'))
+}
+
 function openSidebar(location) {
   currentSidebarLocation = location
   const sidebar = document.getElementById('location-sidebar')
   sidebar.querySelector('.sidebar-title').textContent = getTitle(location)
   sidebar.querySelector('.sidebar-address').textContent = location.address || ''
   sidebar.querySelector('.sidebar-time').textContent = `${location.time.start}–${location.time.end}`
+  refreshSidebarActions(location)
   sidebar.querySelector('.sidebar-description').textContent = getDescription(location)
 
 //   const tagsEl = sidebar.querySelector('.sidebar-tags')
@@ -102,6 +120,9 @@ function closeSidebar() {
 }
 
 document.getElementById('sidebar-close').addEventListener('click', closeSidebar)
+document.addEventListener('langChanged', () => {
+  if (currentSidebarLocation) openSidebar(currentSidebarLocation)
+})
 
 // ---------------------------------------------------------------------------
 // Data load
