@@ -186,6 +186,36 @@ body {
   color: var(--color-accent);
 }
 
+.sidebar-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.sidebar-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  text-decoration: none;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.2;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.sidebar-action:hover {
+  border-color: var(--color-accent);
+  background: #fff8f7;
+  transform: translateY(-1px);
+}
+
 .sidebar-description {
   font-size: 0.88rem;
   line-height: 1.55;

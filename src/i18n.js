@@ -21,6 +21,9 @@ export const translations = {
     list: {
       noResults: 'Ei tuloksia valituilla suodattimilla.'
     },
+    sidebar: {
+      directions: 'Avaa Google Mapsissa'
+    },
     tabs: {
       map: 'Kartta',
       list: 'Lista'
@@ -48,6 +51,9 @@ export const translations = {
     },
     list: {
       noResults: 'No results for the selected filters.'
+    },
+    sidebar: {
+      directions: 'Open in Google Maps'
     },
     tabs: {
       map: 'Map',
