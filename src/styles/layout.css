@@ -33,16 +33,17 @@ body {
 .header-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   min-width: 0;
 }
 
 /* Hidden by default; theme-flyer.css and theme-simple.css make it visible */
 .header-sun {
   display: none;
-  height: 52px;
+  height: 40px;
   width: auto;
   flex-shrink: 0;
+  margin: 10px 4px 10px 2px;
 }
 
 .header-controls {

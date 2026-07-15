@@ -3,7 +3,7 @@
    Deep blue header; lighter sky blue everywhere else. */
 
 :root {
-  --header-height: 52px;
+  --header-height: 60px;
   --sidebar-width: 340px;
   --color-header-top: #3068ad;
   --color-header-bg: #4a90e2;
