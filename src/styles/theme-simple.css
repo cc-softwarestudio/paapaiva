@@ -44,39 +44,17 @@ body {
   color: var(--color-text-on-header);
 }
 
-.lang-toggle {
-  padding: 4px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.15);
+.instagram-link {
   color: var(--color-text-on-header);
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  letter-spacing: 0.05em;
-  transition: all 0.15s ease;
+  transition: opacity 0.15s ease;
 }
 
-.lang-toggle:hover {
-  background: rgba(255, 255, 255, 0.28);
-  border-color: rgba(255, 255, 255, 0.85);
+.instagram-link:hover {
+  opacity: 0.75;
 }
 
-.theme-picker-label {
-  color: var(--color-text-on-header);
-  opacity: 1;
-}
-
-#theme-picker {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.6);
-  color: var(--color-text-on-header);
-  opacity: 1;
-}
-
-#theme-picker option {
-  background: #ffffff;
-  color: var(--color-text);
+.instagram-link__icon {
+  display: block;
 }
 
 /* Filter bar */

@@ -52,22 +52,12 @@ body {
   flex-shrink: 0;
 }
 
-/* Theme picker — temporary preview tool */
-.theme-picker-label {
-  font-size: 0.75rem;
-  opacity: 0.7;
-  white-space: nowrap;
-}
-
-#theme-picker {
-  padding: 4px 8px;
-  cursor: pointer;
-  background: transparent;
-  color: inherit;
-  border: 1px solid currentColor;
-  border-radius: 4px;
-  font-size: 0.78rem;
-  opacity: 0.8;
+.instagram-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  line-height: 0;
 }
 
 /* ── Filter bar ──────────────────────────────────────────── */
