@@ -1,0 +1,300 @@
+/* THEME: SIMPLE
+   Flyer sky-blue map palette + voyager tiles, default clean typography.
+   Deep blue header; lighter sky blue everywhere else. */
+
+:root {
+  --header-height: 52px;
+  --sidebar-width: 340px;
+  --color-header-top: #3068ad;
+  --color-header-bg: #4a90e2;
+  --gradient-header: linear-gradient(180deg, var(--color-header-top) 0%, var(--color-header-bg) 100%);
+  --color-bg: #c5dff5;
+  --color-surface: #eaf4fc;
+  --color-surface-bright: #ffffff;
+  --color-accent: #e8452a;
+  --color-tab-active: #3d7ec8;
+  --color-tab-inactive: #a8c0d4;
+  --color-text: #1a1a1a;
+  --color-text-on-header: #ffffff;
+  --color-muted: #5a6f82;
+  --color-border: #a8c4dc;
+  --color-marker: #e8452a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Header — deep flyer blue */
+#app-header {
+  background: var(--gradient-header);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.header-sun {
+  display: block;
+}
+
+#app-header h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-text-on-header);
+}
+
+.lang-toggle {
+  padding: 4px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-text-on-header);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: all 0.15s ease;
+}
+
+.lang-toggle:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.theme-picker-label {
+  color: var(--color-text-on-header);
+  opacity: 1;
+}
+
+#theme-picker {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-on-header);
+  opacity: 1;
+}
+
+#theme-picker option {
+  background: #ffffff;
+  color: var(--color-text);
+}
+
+/* Filter bar */
+#filter-bar {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  gap: 8px;
+  padding: 6px 16px;
+}
+
+#time-filters { gap: 4px; }
+
+#tag-filters {
+  gap: 4px;
+  border-left: 1px solid var(--color-border);
+}
+
+.time-btn,
+.tag-btn {
+  padding: 3px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: var(--color-surface-bright);
+  color: var(--color-text);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  transition: all 0.15s ease;
+}
+
+.time-btn:hover,
+.tag-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.time-btn--active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: white;
+}
+
+.tag-btn--active {
+  background: var(--color-text);
+  border-color: var(--color-text);
+  color: white;
+}
+
+/* Mobile tabs */
+#mobile-tabs {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-tab {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-tab-inactive);
+}
+
+.mobile-tab--active {
+  font-weight: 600;
+  color: var(--color-tab-active);
+  border-bottom-color: var(--color-tab-active);
+}
+
+/* Content area */
+#location-panel {
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+}
+
+#map-wrapper {
+  outline: 1px solid var(--color-border);
+  outline-offset: -1px;
+}
+
+#map .leaflet-tile-pane {
+  filter: saturate(1.4) hue-rotate(12deg) brightness(1.03);
+}
+
+/* Sidebar */
+.sidebar {
+  background: var(--color-surface-bright);
+  border-left: 1px solid var(--color-border);
+}
+
+#sidebar-close {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: var(--color-muted);
+  padding: 4px 6px;
+}
+
+#sidebar-close:hover {
+  color: var(--color-text);
+}
+
+.sidebar-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  padding-right: 28px;
+  line-height: 1.35;
+}
+
+.sidebar-address {
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  margin-bottom: 4px;
+}
+
+.sidebar-time {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: var(--color-accent);
+}
+
+.sidebar-description {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin-bottom: 16px;
+  color: var(--color-text);
+}
+
+/* Location list */
+.location-item {
+  padding: 9px 16px;
+  border-bottom: 1px solid var(--color-border);
+  border-left-width: 3px;
+}
+
+.location-item:hover {
+  background: var(--color-bg);
+}
+
+.location-item--active {
+  background: #f0f8ff;
+  border-left-color: var(--color-accent);
+}
+
+.location-item__title {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.location-item__time {
+  font-size: 0.78rem;
+  color: var(--color-muted);
+}
+
+.tag {
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-muted);
+}
+
+.location-list-empty {
+  padding: 16px;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+/* Markers — flyer style */
+.marker-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-marker);
+  border: 2.5px solid #fff;
+  box-shadow: 2px 2px 0 rgba(43, 90, 155, 0.35);
+  transition: transform 0.1s ease;
+}
+
+.marker--active .marker-dot {
+  transform: scale(1.5);
+  box-shadow: 3px 3px 0 rgba(43, 90, 155, 0.4);
+}
+
+.cluster-circle {
+  background: var(--color-marker);
+  color: #fff;
+  font-weight: 700;
+  border: 2.5px solid #fff;
+  box-shadow: 2px 2px 0 rgba(43, 90, 155, 0.35);
+  font-size: 0.78rem;
+  border-radius: 50%;
+}
+
+.cluster-sm .cluster-circle { width: 30px; height: 30px; }
+.cluster-md .cluster-circle { width: 38px; height: 38px; }
+.cluster-lg .cluster-circle { width: 50px; height: 50px; }
+
+/* Loading */
+#loading-overlay {
+  background: var(--color-bg);
+  gap: 16px;
+}
+
+#loading-status {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.loading-spinner {
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-accent);
+}
+
+.loading-error {
+  color: var(--color-accent);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 600px) {
+  .time-btn, .tag-btn { font-size: 0.72rem; padding: 2px 8px; }
+}

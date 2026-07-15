@@ -37,7 +37,7 @@ body {
   min-width: 0;
 }
 
-/* Hidden by default; theme-flyer.css makes it visible */
+/* Hidden by default; theme-flyer.css and theme-simple.css make it visible */
 .header-sun {
   display: none;
   height: 52px;

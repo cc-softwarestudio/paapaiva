@@ -18,4 +18,10 @@ export const MAP_TILE_LAYERS = {
     subdomains: 'abcd',
     maxZoom: 20,
   },
+  simple: {
+    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    attribution: TILE_ATTRIBUTION,
+    subdomains: 'abcd',
+    maxZoom: 20,
+  },
 }

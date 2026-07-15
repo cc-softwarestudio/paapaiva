@@ -4,6 +4,7 @@ import { initFilters, applyFilters, refreshFilterLabels } from './filters.js'
 import { renderList, highlightListItem } from './locationList.js'
 import { toggleLang, t, getTitle, getDescription, getTagLabel } from './i18n.js'
 import themeFlyerUrl from './styles/theme-flyer.css?url'
+import themeSimpleUrl from './styles/theme-simple.css?url'
 import themeDefaultUrl from './styles/theme-default.css?url'
 import themeRisoUrl from './styles/theme-riso.css?url'
 import themeHanddrawnUrl from './styles/theme-handdrawn.css?url'
@@ -64,6 +65,7 @@ tabListBtn.addEventListener('click', switchToListTab)
 
 const THEME_URLS = {
   'theme-flyer': themeFlyerUrl,
+  'theme-simple': themeSimpleUrl,
   'theme-default': themeDefaultUrl,
   'theme-riso': themeRisoUrl,
   'theme-handdrawn': themeHanddrawnUrl,
