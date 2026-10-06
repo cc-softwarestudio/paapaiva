@@ -1,116 +1,82 @@
 import { SHEET_CSV_URL } from './config.js'
+import {
+  csvToObjects, rowToLocation, forwardGeocode, reverseGeocode,
+  forwardKey, reverseKey, GEOCODE_INTERVAL_MS
+} from './sheetCore.js'
+import seedCache from './data/geocache.json'
 
 // ---------------------------------------------------------------------------
-// CSV parser
+// Geocode cache
+//
+// Shipped seed (data/geocache.json, built by `npm run build-geocache`) merged
+// with this visitor's localStorage. Only rows missing from both hit Nominatim.
+// Values: address string (rev:), { lat, lng } (fwd:), or false = no match.
 // ---------------------------------------------------------------------------
 
-function parseCSV(text) {
-  const rows = []
-  let current = [], field = '', inQuotes = false
+const CACHE_KEY = 'paapaiva-geocache-v2'
 
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i], next = text[i + 1]
-    if (inQuotes) {
-      if (ch === '"' && next === '"') { field += '"'; i++ }
-      else if (ch === '"') { inQuotes = false }
-      else { field += ch }
-    } else {
-      if (ch === '"') { inQuotes = true }
-      else if (ch === ',') { current.push(field); field = '' }
-      else if (ch === '\r' && next === '\n') {
-        current.push(field); rows.push(current); current = []; field = ''; i++
-      } else if (ch === '\n') {
-        current.push(field); rows.push(current); current = []; field = ''
-      } else { field += ch }
-    }
-  }
-  if (field || current.length) { current.push(field); rows.push(current) }
-  return rows
-}
-
-function csvToObjects(text) {
-  const rows = parseCSV(text)
-  if (rows.length < 2) throw new Error('Sheet has no data rows')
-  const headers = rows[0].map(h => h.trim())
-  return rows.slice(1)
-    .filter(row => row.some(cell => cell.trim()))
-    .map(row => Object.fromEntries(headers.map((h, i) => [h, (row[i] ?? '').trim()])))
-}
-
-// ---------------------------------------------------------------------------
-// Row → location
-// ---------------------------------------------------------------------------
-
-function rowToLocation(row) {
-  const id = row.id || row.ID
-  const title = row.title || row.Title
-  const timeStart = row.time_start || row['time start']
-  const timeEnd = row.time_end || row['time end']
-  if (!id || !title || !timeStart || !timeEnd) return null
-
-  const lat = row.lat ? parseFloat(row.lat) : null
-  const lng = row.lng ? parseFloat(row.lng) : null
-  return {
-    id,
-    title,
-    title_en: row.title_en || null,
-    address: row.address || null,
-    lat: lat != null && !isNaN(lat) ? lat : null,
-    lng: lng != null && !isNaN(lng) ? lng : null,
-    time: { start: timeStart, end: timeEnd },
-    description: row.description || '',
-    description_en: row.description_en || null,
-    tags: row.tags ? row.tags.split(',').map(t => t.trim()).filter(Boolean) : []
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Nominatim geocoding  (results cached in localStorage)
-// ---------------------------------------------------------------------------
-
-const NOMINATIM = 'https://nominatim.openstreetmap.org'
-const CACHE_KEY = 'paapaiva-geocache-v1'
-
-function loadCache() {
+function loadLocalCache() {
   try { return JSON.parse(localStorage.getItem(CACHE_KEY) || '{}') }
   catch { return {} }
 }
 
-function saveCache(cache) {
+function saveLocalCache(cache) {
   try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)) }
   catch {}
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)) }
 
-async function forwardGeocode(address) {
-  const url = `${NOMINATIM}/search?q=${encodeURIComponent(address)}&format=json&limit=1&countrycodes=fi&email=miko.paajanen@gmail.com`
-  const res = await fetch(url)
-  const data = await res.json()
-  if (!data?.length) return null
-  return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) }
+/** Fills in what the cache knows; returns true if the location still needs a Nominatim lookup. */
+function applyCache(loc, cache) {
+  const hasCoords = loc.lat != null && loc.lng != null
+  if (hasCoords && !loc.address) {
+    const hit = cache[reverseKey(loc.lat, loc.lng)]
+    if (hit) loc.address = hit
+    return hit === undefined
+  }
+  if (!hasCoords && loc.address) {
+    const hit = cache[forwardKey(loc.address)]
+    if (hit) { loc.lat = hit.lat; loc.lng = hit.lng }
+    return hit === undefined
+  }
+  return false
 }
 
-async function reverseGeocode(lat, lng) {
-  const url = `${NOMINATIM}/reverse?lat=${lat}&lon=${lng}&format=json&email=miko.paajanen@gmail.com`
-  const res = await fetch(url)
-  const data = await res.json()
-  if (!data || data.error) return null
-  const a = data.address
-  const parts = [
-    a.road && a.house_number ? `${a.road} ${a.house_number}` : a.road,
-    a.suburb || a.neighbourhood,
-    a.city || a.town || a.village,
-    a.postcode
-  ].filter(Boolean)
-  return { address: parts.join(', ') || data.display_name }
+/** Geocodes uncached locations one at a time, after the page is already usable. */
+async function geocodeInBackground(pending, onResolved) {
+  const local = loadLocalCache()
+  for (const [i, loc] of pending.entries()) {
+    if (i > 0) await sleep(GEOCODE_INTERVAL_MS)
+    try {
+      if (loc.lat != null) {
+        const address = await reverseGeocode(loc.lat, loc.lng)
+        local[reverseKey(loc.lat, loc.lng)] = address ?? false
+        if (address) loc.address = address
+      } else {
+        const address = loc.address
+        const geo = await forwardGeocode(address)
+        local[forwardKey(address)] = geo ?? false
+        if (geo) { loc.lat = geo.lat; loc.lng = geo.lng }
+      }
+      saveLocalCache(local)
+      onResolved?.(loc)
+    } catch {
+      // Network / rate-limit error: leave uncached so the next page load retries
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
 // Main export
 // ---------------------------------------------------------------------------
 
-export async function fetchLocations(onStatus) {
+/**
+ * Resolves as soon as the sheet is parsed. Locations whose address/coordinates
+ * are not cached are geocoded afterwards; onResolved(location) fires for each
+ * one once its fields have been filled in.
+ */
+export async function fetchLocations(onStatus, onResolved) {
   onStatus?.('Haetaan tapahtumatietoja... / Fetching event data...')
 
   const PUBLISH_INSTRUCTIONS =
@@ -134,37 +100,9 @@ export async function fetchLocations(onStatus) {
   const locations = rows.map(rowToLocation).filter(Boolean)
   if (!locations.length) throw new Error('Sheet has no valid location rows')
 
-  const cache = loadCache()
-  let geocodeCount = 0
+  const cache = { ...seedCache, ...loadLocalCache() }
+  const pending = locations.filter(loc => applyCache(loc, cache))
+  if (pending.length) geocodeInBackground(pending, onResolved)
 
-  for (const loc of locations) {
-    const hasCoords = loc.lat != null && loc.lng != null
-    const hasAddress = !!loc.address
-
-    if (hasCoords && hasAddress) continue
-
-    if (hasCoords && !hasAddress) {
-      const key = `rev:${loc.lat},${loc.lng}`
-      if (cache[key]) { loc.address = cache[key]; continue }
-      onStatus?.(`Haetaan osoitetta... / Fetching address for ${loc.id}`)
-      if (geocodeCount > 0) await sleep(1100)
-      const geo = await reverseGeocode(loc.lat, loc.lng)
-      if (geo) { loc.address = geo.address; cache[key] = geo.address }
-      geocodeCount++
-      continue
-    }
-
-    if (!hasCoords && hasAddress) {
-      const key = `fwd:${loc.address}`
-      if (cache[key]) { loc.lat = cache[key].lat; loc.lng = cache[key].lng; continue }
-      onStatus?.(`Haetaan koordinaatteja... / Geocoding ${loc.address}`)
-      if (geocodeCount > 0) await sleep(1100)
-      const geo = await forwardGeocode(loc.address)
-      if (geo) { loc.lat = geo.lat; loc.lng = geo.lng; cache[key] = { lat: geo.lat, lng: geo.lng } }
-      geocodeCount++
-    }
-  }
-
-  if (geocodeCount > 0) saveCache(cache)
   return locations
 }

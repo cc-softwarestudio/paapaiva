@@ -107,8 +107,19 @@ document.getElementById('sidebar-close').addEventListener('click', closeSidebar)
 // Data load
 // ---------------------------------------------------------------------------
 
-fetchLocations(setStatus)
-  .then(locations => {
+let locations = []
+
+// A location got its address/coordinates from background geocoding
+function onLocationResolved(location) {
+  updateMarkers(applyFilters(locations))
+  if (currentSidebarLocation === location) {
+    document.querySelector('#location-sidebar .sidebar-address').textContent = location.address || ''
+  }
+}
+
+fetchLocations(setStatus, onLocationResolved)
+  .then(loaded => {
+    locations = loaded
     hideOverlay()
 
     function onSelectLocation(location) {

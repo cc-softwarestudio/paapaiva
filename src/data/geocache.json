@@ -1,0 +1,39 @@
+{
+  "rev:60.20862612180321,24.90976276685737": "Hakamäentie, Pasila, Helsinki, 00280",
+  "fwd:Akseli Toivosen kenttä": {
+    "lat": 60.2143194,
+    "lng": 24.9489308
+  },
+  "fwd:Piritori": {
+    "lat": 60.1879894,
+    "lng": 24.9608541
+  },
+  "rev:60.255985,24.849978": "Kilterinkuja, Myyrmäki, Vantaa, 01604",
+  "rev:60.16472023612457,25.01197495214037": "Kruunuvuorenranta, Helsinki, 00590",
+  "rev:60.17976876576981,24.966636523610283": "Hanasaarenlaituri, Sörnäinen, Helsinki, 00540",
+  "rev:60.179511179361675,24.95077177660387": "Siltasaarenkatu, Kallio, Helsinki, 00530",
+  "rev:60.200418640594236,24.962379623834465": "Jyrängöntie, Vallila, Helsinki, 00550",
+  "rev:60.18151204055011,24.96517064580312": "Sörnäisten rantapromenadi, Sörnäinen, Helsinki, 00500",
+  "rev:60.18968717699866,24.957624906545323": "Aleksis Kiven katu 1-3, Vallila, Helsinki, 00500",
+  "rev:60.21540037533332,24.858613962316678": "Valtatie, Pitäjänmäki, Helsinki, 00360",
+  "rev:60.230297101390356,25.01185011226851": "Pihlajamäentie, Pihlajamäki, Helsinki, 00710",
+  "rev:60.200367803873284,24.962335357036185": "Jyrängöntie, Vallila, Helsinki, 00550",
+  "fwd:Helsinki Central Library Oodi": {
+    "lat": 60.1739404,
+    "lng": 24.9379816
+  },
+  "rev:60.16236214774063,24.93275307851078": "Bulevardi 40, Punavuori, Helsinki, 00120",
+  "rev:60.19042097002804,24.93758903567958": "Viipurinkatu, Alppiharju, Helsinki, 00521",
+  "fwd:Dallapénpuisto": {
+    "lat": 60.1899333,
+    "lng": 24.9581631
+  },
+  "rev:60.18663302292668,24.963585768717596": "Vilhonvuorenkuja, Sörnäinen, Helsinki, 00500",
+  "fwd:Alli Tryggin puisto": {
+    "lat": 60.1834601,
+    "lng": 24.9548393
+  },
+  "rev:60.16797029306983,24.914149886910753": "Lapinlahdenpolku 8, Länsisatama, Helsinki, 00180",
+  "rev:60.19047465145723,24.937445026721697": "Viipurinkatu, Alppiharju, Helsinki, 00521",
+  "rev:60.17952475155789,24.94769790680064": "Eläintarhantie, Kallio, Helsinki, 00530"
+}

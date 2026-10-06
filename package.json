@@ -6,7 +6,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "prepare-data": "node scripts/prepare-data.js",
-    "fetch-sheet": "node scripts/fetch-sheet.js"
+    "fetch-sheet": "node scripts/fetch-sheet.js",
+    "build-geocache": "node scripts/build-geocache.js"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
